@@ -1,6 +1,6 @@
 "-------------------------------------------------------------------------------
 " My .vimrc file
-" Brian D Nelson, <bdnelson@bdnsolutions.com>
+" Brian D Nelson, <brian@forefrontlabs.com, bdnelson@gmail.com>
 " 1998 - present
 "
 " This file has been developed over many years and has many ideas and configs
