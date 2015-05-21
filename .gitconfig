@@ -1,0 +1,34 @@
+[user]
+	name = Brian Nelson
+	email = brian@forefrontlabs.com
+[push]
+	default = matching
+[core]
+	editor = /usr/bin/vim
+	excludesfile = ~/.gitignore
+[init]
+  templatedir = /Users/bdnelson/.git-template-with-git-hooks
+[alias]
+  ig = update-index --assume-unchanged
+  unig = update-index --no-assume-unchanged
+  iged = !git ls-files -v | grep ^[[:lower:]]
+	ksreview = "!f() { local SHA=${1:-HEAD}; local BRANCH=${2:-develop}; if [ $SHA == $BRANCH ]; then SHA=HEAD; fi; git difftool -y -t Kaleidoscope $BRANCH...$SHA; }; f"
+	rnreview = "!f() { local SHA=${1:-HEAD}; local BRANCH=${2:-rails_api}; if [ $SHA == $BRANCH ]; then SHA=HEAD; fi; git difftool -y -t Kaleidoscope $BRANCH...$SHA; }; f"
+	mreview = "!f() { local SHA=${1:-HEAD}; local BRANCH=${2:-master}; if [ $SHA == $BRANCH ]; then SHA=HEAD; fi; git difftool -y -t Kaleidoscope $BRANCH...$SHA; }; f"
+[difftool "Kaleidoscope"]
+	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[diff]
+	tool = Kaleidoscope
+[difftool]
+	prompt = false
+[mergetool "Kaleidoscope"]
+	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+	trustExitCode = true
+[mergetool]
+	prompt = false
+[merge]
+	tool = Kaleidoscope
+[git-up "fetch"]
+	prune = true
+[gui]
+	fontdiff = -family Menlo -size 14 -weight normal -slant roman -underline 0 -overstrike 0
