@@ -20,8 +20,12 @@
 "   * fugitive.vim - https://github.com/tpope/vim-fugitive
 "   * ctrlp.vim - https://github.com/kien/ctrlp.vim
 "   * rails.vim - https://github.com/tpope/vim-rails
+"   * rust.vim - https://github.com/rust-lang/rust.vim.git
 "
 "-------------------------------------------------------------------------------
+
+execute pathogen#infect()
+
 filetype off
 syntax on
 filetype plugin indent on
@@ -83,6 +87,7 @@ set tags+=gems.tags
 "-------------------------------------------------------------------------------
 " File mappings
 "-------------------------------------------------------------------------------
+au BufRead,BufNewFile *.mkd set filetype=markdown
 au BufRead,BufNewFile *.md set filetype=markdown
 
 "-------------------------------------------------------------------------------
@@ -140,3 +145,23 @@ map go <C-t>
 
 " Remove trailing whitespace
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
+
+"-------------------------------------------------------------------------------
+" Rust
+"-------------------------------------------------------------------------------
+set hidden
+
+"enable mouse support
+"set mouse=a 
+
+"-------------------------------------------------------------------------------
+" NERDTree
+"-------------------------------------------------------------------------------
+let g:NERDTreeDirArrows = 1
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+
+"CTRL-t to toggle tree view with CTRL-t
+nmap <silent> <C-t> :NERDTreeToggle<CR> 
+"Set F2 to put the cursor to the nerdtree
+nmap <silent> <F2> :NERDTreeFind<CR> 
