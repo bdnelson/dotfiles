@@ -1,35 +1,75 @@
+"===============================================================================
 "-------------------------------------------------------------------------------
 " My .vimrc file
 " Brian D Nelson, <brian@forefrontlabs.com, bdnelson@gmail.com>
 " 1998 - present
 "
 " This file has been developed over many years and has many ideas and configs
-" that came from others.  I have tried to keep track of links to those
-" sources, but I'm sure I haven't got them all.
-"
-" Sources:
-"   * http://blog.adamlowe.com/2009/12/vim-destroys-all-other-rails-editors.html
-"   * https://github.com/jgoulah/dotfiles/blob/master/vimrc#L178
-"
-" Plugins:
-"   * NERDtree - https://github.com/scrooloose/nerdtree
-"   * NERDcomenter - https://github.com/scrooloose/nerdcommenter
-"   * ack.vim - https://github.com/mileszs/ack.vim
-"   * surround.vim - https://github.com/tpope/vim-surround
-"   * yankring.vim - http://www.vim.org/scripts/script.php?script_id=1234
-"   * fugitive.vim - https://github.com/tpope/vim-fugitive
-"   * ctrlp.vim - https://github.com/kien/ctrlp.vim
-"   * rails.vim - https://github.com/tpope/vim-rails
-"   * rust.vim - https://github.com/rust-lang/rust.vim.git
+" that came from others.  
 "
 "-------------------------------------------------------------------------------
+"===============================================================================
 
-execute pathogen#infect()
+
+"===============================================================================
+"-------------------------------------------------------------------------------
+"
+"                                Vundle Setup
+"
+"-------------------------------------------------------------------------------
+"===============================================================================
+
 
 filetype off
-syntax on
-filetype plugin indent on
-let mapLeader="\\"
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+"-------------------------------------------------------------------------------
+" Define plugins
+"-------------------------------------------------------------------------------
+" Keep Plugin commands between vundle#begin/end.
+
+Plugin 'tpope/vim-fugitive'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/syntastic'
+Plugin 'kien/ctrlp.vim'
+Plugin 'tpope/vim-surround'
+Plugin 'majutsushi/tagbar'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-abolish'
+Plugin 'tpope/vim-bundler'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'mbbill/undotree'
+Plugin 'xolox/vim-misc'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'tsaleh/vim-align'
+Plugin 'tpope/vim-endwise'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'rizzatti/dash.vim'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin '907th/vim-auto-save'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+
+"===============================================================================
+"-------------------------------------------------------------------------------
+"
+"                           General Configuration
+"
+"-------------------------------------------------------------------------------
+"===============================================================================
+
 
 "-------------------------------------------------------------------------------
 " Constraints
@@ -38,6 +78,7 @@ set history=1000
 set undolevels=1000
 set nobackup
 set nowritebackup
+set updatetime=250
 
 "-------------------------------------------------------------------------------
 " Display controls
@@ -63,21 +104,17 @@ set showmatch
 set smarttab
 set autoindent
 set expandtab
-set ts=2
-set shiftwidth=2
+set ts=4
+set shiftwidth=4
+set softtabstop=4
 
 "-------------------------------------------------------------------------------
 " Syntax controls
 "-------------------------------------------------------------------------------
-set background=dark
 syntax on
-colorscheme slate2
-highlight Comment ctermfg=darkgrey
-highlight Comment guifg=darkgrey
-highlight ColorColumn ctermbg=245
-highlight clear CursorLine
-highlight CursorLine ctermbg=236
-highlight CursorColumn ctermbg=236
+let g:solarized_termcolors=256
+set background=dark
+colorscheme solarized
 
 "-------------------------------------------------------------------------------
 " Tags
@@ -104,28 +141,12 @@ if has("autocmd")
     \ endif
 endif
 
-
-"-------------------------------------------------------------------------------
-" Plugin Setup
-"-------------------------------------------------------------------------------
-
-" Setup yankring history
-silent execute '!mkdir -p $HOME/.vim/tmp/yankring'
-let g:yankring_history_dir =  '$HOME/.vim/tmp/yankring'
-let g:yankring_manage_numbered_reg = 1
-
-" Alternate file extensions for Obj-C
-let g:alternateExtensions_m = "h"
-let g:alternateExtensions_h = "m"
-
-" CtrlP setup
-set runtimepath^=~/.vim/bundle/ctrlp.vim
-let g:ctrlp_working_path_mode = 'ra'
-map <leader>p :CtrlP<CR>
-
 "-------------------------------------------------------------------------------
 " Key mappings/Additional commands
 "-------------------------------------------------------------------------------
+
+" Leader
+let mapLeader="\\"
 
 " General Key controls
 inoremap <F1> <ESC>
@@ -143,25 +164,131 @@ map <leader>tm :tabmove
 map gi <C-]>
 map go <C-t>
 
-" Remove trailing whitespace
+
+"===============================================================================
+"-------------------------------------------------------------------------------
+"
+"                               Scripts/Helpers
+"
+"-------------------------------------------------------------------------------
+"===============================================================================
+
+
+"-------------------------------------------------------------------------------
+" trailing whitespace 
+"-------------------------------------------------------------------------------
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
+highlight ExtraWhitespace ctermbg=red guibg=red
+autocmd Syntax * syn match ExtraWhitespace /\s\+$\| \+\ze\\t/
 
 "-------------------------------------------------------------------------------
-" Rust
+" Auto reload .vimrc on save
 "-------------------------------------------------------------------------------
-set hidden
+if has ('autocmd') " Remain compatible with earlier versions
+  augroup vimrc     " Source vim configuration upon save
+    autocmd! BufWritePost $MYVIMRC source % | 
+                \ echom "Reloaded " .  $MYVIMRC | redraw
+    autocmd! BufWritePost $MYGVIMRC if has('gui_running') | so % | 
+                \ echom "Reloaded " . $MYGVIMRC | endif | redraw
+  augroup END
+endif " has autocmd
 
-"enable mouse support
-"set mouse=a 
+
+"===============================================================================
+"-------------------------------------------------------------------------------
+"
+"                           Plugin Configurations
+"
+"-------------------------------------------------------------------------------
+"===============================================================================
+
 
 "-------------------------------------------------------------------------------
-" NERDTree
+" Syntastic
 "-------------------------------------------------------------------------------
-let g:NERDTreeDirArrows = 1
-let g:NERDTreeDirArrowExpandable = '▸'
-let g:NERDTreeDirArrowCollapsible = '▾'
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
-"CTRL-t to toggle tree view with CTRL-t
-nmap <silent> <C-t> :NERDTreeToggle<CR> 
-"Set F2 to put the cursor to the nerdtree
-nmap <silent> <F2> :NERDTreeFind<CR> 
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 1
+
+let g:syntastic_ruby_checkers = ['mri', 'reek']
+let g:syntastic_aggregate_errors = 0
+
+"-------------------------------------------------------------------------------
+" Ctrl-P
+"-------------------------------------------------------------------------------
+map <leader>p :CtrlP<CR>
+let g:ctrlp_working_path_mode = 'ra'
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+
+"-------------------------------------------------------------------------------
+" Tagbar
+"-------------------------------------------------------------------------------
+nmap <leader>m :TagbarToggle<CR>
+
+"-------------------------------------------------------------------------------
+" vim-ruby
+"-------------------------------------------------------------------------------
+autocmd filetype ruby set tabstop=2 shiftwidth=2 softtabstop=2
+autocmd FileType ruby set omnifunc=rubycomplete#Complete
+autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1 
+autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
+autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
+
+"-------------------------------------------------------------------------------
+" vim-airline
+"-------------------------------------------------------------------------------
+set laststatus=2
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='solarized'
+
+"-------------------------------------------------------------------------------
+" vim-gitgutter
+"-------------------------------------------------------------------------------
+let g:gitgutter_realtime = 1
+let g:gitgutter_eager = 1
+
+"-------------------------------------------------------------------------------
+" undotree
+"-------------------------------------------------------------------------------
+nmap <leader>u :UndotreeToggle<CR>
+
+"-------------------------------------------------------------------------------
+" auto completion
+"-------------------------------------------------------------------------------
+inoremap <C-@> <C-x><C-o>
+set wildmode=list:longest,list:full
+set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
+set completeopt=menu,noselect,preview,noinsert
+
+"-------------------------------------------------------------------------------
+" tags
+"-------------------------------------------------------------------------------
+set tags+=./gems.tags
+
+"-------------------------------------------------------------------------------
+" Dash
+"-------------------------------------------------------------------------------
+nmap <leader>d :Dash<CR>
+
+"-------------------------------------------------------------------------------
+" Indent guides
+"-------------------------------------------------------------------------------
+nmap <leader>g :IndentGuidesToggle<CR>
+let g:indent_guides_auto_colors = 0
+let g:indent_guides_start_level = 2
+hi IndentGuidesOdd  ctermbg=237
+hi IndentGuidesEven  ctermbg=236
+
+"-------------------------------------------------------------------------------
+" AutoSave
+"-------------------------------------------------------------------------------
+"autocmd FileType ruby,eruby let g:auto_save = 1
+let g:auto_save_silent = 1
