@@ -56,6 +56,8 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'rizzatti/dash.vim'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin '907th/vim-auto-save'
+Plugin 'gcorne/vim-sass-lint'
+Plugin 'godlygeek/tabular'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -114,7 +116,8 @@ set softtabstop=4
 syntax on
 let g:solarized_termcolors=256
 set background=dark
-colorscheme solarized
+"colorscheme solarized
+colorscheme slate2
 
 "-------------------------------------------------------------------------------
 " Tags
@@ -159,6 +162,9 @@ map <leader>tn :tabnew<CR>
 map <leader>tc :tabclose<CR>
 map <leader>te :tabedit
 map <leader>tm :tabmove
+
+" Tab navigation and control
+map ft <C-W><C-W>
 
 " Tag navigation
 map gi <C-]>
@@ -212,11 +218,15 @@ set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 1
 
+let g:syntastic_sass_checkers = ['sass_lint']
+let g:syntastic_scss_checkers = ['sass_lint']
 let g:syntastic_ruby_checkers = ['mri', 'reek']
 let g:syntastic_aggregate_errors = 0
+nmap <leader>s :SyntasticToggleMode<CR>
+nmap <leader>sc :SyntasticCheck<CR>
 
 "-------------------------------------------------------------------------------
 " Ctrl-P
@@ -235,7 +245,7 @@ nmap <leader>m :TagbarToggle<CR>
 "-------------------------------------------------------------------------------
 " vim-ruby
 "-------------------------------------------------------------------------------
-autocmd filetype ruby set tabstop=2 shiftwidth=2 softtabstop=2
+autocmd filetype ruby,eruby,html,css,javascript set tabstop=2 shiftwidth=2 softtabstop=2
 autocmd FileType ruby set omnifunc=rubycomplete#Complete
 autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1 
 autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
@@ -292,3 +302,13 @@ hi IndentGuidesEven  ctermbg=236
 "-------------------------------------------------------------------------------
 "autocmd FileType ruby,eruby let g:auto_save = 1
 let g:auto_save_silent = 1
+
+"-------------------------------------------------------------------------------
+" Markdown
+"-------------------------------------------------------------------------------
+let g:vim_markdown_folding_disabled = 1
+
+"-------------------------------------------------------------------------------
+" Auto-Pairs
+"-------------------------------------------------------------------------------
+let g:AutoPairsShortcutToggle = '<leader>ap'

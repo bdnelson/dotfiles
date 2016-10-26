@@ -120,6 +120,7 @@ alias be='bundle exec'
 alias mark='open -a Marked\ 2.app'
 alias appcode='open -a AppCode.app'
 alias lock='/System/Library/CoreServices/Menu\ Extras/user.menu/Contents/Resources/CGSession -suspend'
+alias gs='git shorty'
 
 # Turn on vi
 set -o vi
