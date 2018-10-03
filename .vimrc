@@ -5,7 +5,7 @@
 " 1998 - present
 "
 " This file has been developed over many years and has many ideas and configs
-" that came from others.  
+" that came from others.
 "
 "-------------------------------------------------------------------------------
 "===============================================================================
@@ -58,6 +58,16 @@ Plugin 'nathanaelkane/vim-indent-guides'
 Plugin '907th/vim-auto-save'
 Plugin 'gcorne/vim-sass-lint'
 Plugin 'godlygeek/tabular'
+Plugin 'kylef/apiblueprint.vim'
+Plugin 'keith/swift.vim'
+
+Plugin 'rust-lang/rust.vim'
+Plugin 'jeffkreeftmeijer/vim-numbertoggle'
+
+Plugin 'prabirshrestha/asyncomplete.vim'
+Plugin 'prabirshrestha/async.vim'
+Plugin 'prabirshrestha/vim-lsp'
+Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -150,6 +160,8 @@ endif
 
 " Leader
 let mapLeader="\\"
+imap jj <Esc>
+imap fj <Esc>
 
 " General Key controls
 inoremap <F1> <ESC>
@@ -181,7 +193,7 @@ map go <C-t>
 
 
 "-------------------------------------------------------------------------------
-" trailing whitespace 
+" trailing whitespace
 "-------------------------------------------------------------------------------
 nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 highlight ExtraWhitespace ctermbg=red guibg=red
@@ -192,9 +204,9 @@ autocmd Syntax * syn match ExtraWhitespace /\s\+$\| \+\ze\\t/
 "-------------------------------------------------------------------------------
 if has ('autocmd') " Remain compatible with earlier versions
   augroup vimrc     " Source vim configuration upon save
-    autocmd! BufWritePost $MYVIMRC source % | 
+    autocmd! BufWritePost $MYVIMRC source % |
                 \ echom "Reloaded " .  $MYVIMRC | redraw
-    autocmd! BufWritePost $MYGVIMRC if has('gui_running') | so % | 
+    autocmd! BufWritePost $MYGVIMRC if has('gui_running') | so % |
                 \ echom "Reloaded " . $MYGVIMRC | endif | redraw
   augroup END
 endif " has autocmd
@@ -216,15 +228,15 @@ set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 1
+let g:syntastic_check_on_wq = 0
 
-let g:syntastic_sass_checkers = ['sass_lint']
-let g:syntastic_scss_checkers = ['sass_lint']
-let g:syntastic_ruby_checkers = ['mri', 'reek']
-let g:syntastic_aggregate_errors = 0
+"let g:syntastic_sass_checkers = ['sass_lint']
+"let g:syntastic_scss_checkers = ['sass_lint']
+let g:syntastic_ruby_checkers = ['mri']
+let g:syntastic_aggregate_errors = 1
 nmap <leader>s :SyntasticToggleMode<CR>
 nmap <leader>sc :SyntasticCheck<CR>
 
@@ -246,10 +258,10 @@ nmap <leader>m :TagbarToggle<CR>
 " vim-ruby
 "-------------------------------------------------------------------------------
 autocmd filetype ruby,eruby,html,css,javascript set tabstop=2 shiftwidth=2 softtabstop=2
-autocmd FileType ruby set omnifunc=rubycomplete#Complete
-autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1 
-autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
-autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
+"autocmd FileType ruby set omnifunc=rubycomplete#Complete
+"autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
+"autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
+"autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
 
 "-------------------------------------------------------------------------------
 " vim-airline
@@ -273,10 +285,17 @@ nmap <leader>u :UndotreeToggle<CR>
 "-------------------------------------------------------------------------------
 " auto completion
 "-------------------------------------------------------------------------------
-inoremap <C-@> <C-x><C-o>
-set wildmode=list:longest,list:full
-set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
-set completeopt=menu,noselect,preview,noinsert
+"inoremap <C-@> <C-x><C-o>
+"set wildmode=list:longest,list:full
+"set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
+"set completeopt=menu,noselect,preview,noinsert
+"inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+"imap <c-space> <Plug>(asyncomplete_force_refresh)
+let g:asyncomplete_smart_completion = 1
+let g:asyncomplete_auto_popup = 1
+
 
 "-------------------------------------------------------------------------------
 " tags
@@ -312,3 +331,28 @@ let g:vim_markdown_folding_disabled = 1
 " Auto-Pairs
 "-------------------------------------------------------------------------------
 let g:AutoPairsShortcutToggle = '<leader>ap'
+
+"-------------------------------------------------------------------------------
+" NERDTree
+"-------------------------------------------------------------------------------
+autocmd BufEnter * NERDTreeMirror
+
+"CTRL-t to toggle tree view with CTRL-t
+nmap <silent> <C-n> :NERDTreeToggle<CR>
+"Set F2 to put the cursor to the nerdtree
+nmap <silent> <F2> :NERDTreeFind<CR>
+
+
+"-------------------------------------------------------------------------------
+" Language Servers
+"-------------------------------------------------------------------------------
+if executable('rls')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'rls',
+        \ 'cmd': {server_info->['rustup', 'run', 'nightly', 'rls']},
+        \ 'whitelist': ['rust'],
+        \ })
+endif
+
+autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/
+autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand('%:p:h') . "&" | redraw!
