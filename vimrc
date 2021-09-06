@@ -52,7 +52,7 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'tsaleh/vim-align'
 Plugin 'tpope/vim-endwise'
-Plugin 'jiangmiao/auto-pairs'
+" Plugin 'jiangmiao/auto-pairs'
 Plugin 'rizzatti/dash.vim'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin '907th/vim-auto-save'
@@ -64,10 +64,10 @@ Plugin 'keith/swift.vim'
 Plugin 'rust-lang/rust.vim'
 Plugin 'jeffkreeftmeijer/vim-numbertoggle'
 
-Plugin 'prabirshrestha/asyncomplete.vim'
-Plugin 'prabirshrestha/async.vim'
-Plugin 'prabirshrestha/vim-lsp'
-Plugin 'prabirshrestha/asyncomplete-lsp.vim'
+Plugin 'pangloss/vim-javascript'
+Plugin 'leafgarland/typescript-vim'
+
+"Plugin 'Valloric/YouCompleteMe'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -241,6 +241,14 @@ nmap <leader>s :SyntasticToggleMode<CR>
 nmap <leader>sc :SyntasticCheck<CR>
 
 "-------------------------------------------------------------------------------
+" Split navigation
+"-------------------------------------------------------------------------------
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+"-------------------------------------------------------------------------------
 " Ctrl-P
 "-------------------------------------------------------------------------------
 map <leader>p :CtrlP<CR>
@@ -293,14 +301,8 @@ nmap <leader>u :UndotreeToggle<CR>
 "inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 "inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
 "imap <c-space> <Plug>(asyncomplete_force_refresh)
-let g:asyncomplete_smart_completion = 1
-let g:asyncomplete_auto_popup = 1
-
-
-"-------------------------------------------------------------------------------
-" tags
-"-------------------------------------------------------------------------------
-set tags+=./gems.tags
+"let g:asyncomplete_smart_completion = 1
+"let g:asyncomplete_auto_popup = 1
 
 "-------------------------------------------------------------------------------
 " Dash
@@ -354,5 +356,5 @@ if executable('rls')
         \ })
 endif
 
-autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/
+autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/,$RUST_SRC_PATH/rusty-tags.vi
 autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand('%:p:h') . "&" | redraw!

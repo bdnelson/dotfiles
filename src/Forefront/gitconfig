@@ -1,0 +1,5 @@
+[user]
+	name = Brian D Nelson
+	email = brian@forefrontlabs.com
+[commit]
+    gpgsign = true

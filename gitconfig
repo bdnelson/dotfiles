@@ -1,0 +1,50 @@
+[user]
+    # Please adapt and uncomment the following lines:
+	name = Brian Nelson
+	email = bdnelson@gmail.com
+[push]
+    default = matching
+    followTags = true
+[pager]
+    diff = delta
+    log = delta
+    reflog = delta
+    show = delta
+[delta]
+    features = side-by-side line-numbers decorations
+    syntax-theme = Drakula
+    whitespace-error-style = 22 reverse
+[interactive]
+    diffFilter = delta --color-only
+[pull]
+    ff = only
+[core]
+    editor = /usr/bin/vim
+    excludesfile = ~/.gitignore
+[alias]
+    ig = update-index --assume-unchanged
+    unig = update-index --no-assume-unchanged
+    iged = !git ls-files -v | grep ^[[:lower:]]
+    shorty = status --short --branch
+    wip = for-each-ref --sort='authordate:iso8601' --format=' %(color:green)%(authordate:relative)%09%(color:white)%(refname:short)' refs/heads
+[difftool]
+	prompt = false
+[mergetool]
+	keepBackup = false
+    prompt = false
+[git-up]
+    rebase = true
+[commit]
+	template = /Users/bdnelson/.git/commit-template
+	cleanup = strip
+    #gpgsign = true
+
+[includeIf "gitdir:~/src/HeavyWorth/"]
+    path = ~/src/HeavyWorth/.gitconfig
+
+[includeIf "gitdir:~/src/ForeFront/"]
+    path = ~/src/ForeFront/.gitconfig
+[init]
+	defaultBranch = main
+[color]
+	ui = auto

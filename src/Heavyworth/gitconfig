@@ -1,0 +1,5 @@
+[user]
+	name = Brian D Nelson
+	email = brian@heavyworth.com
+[commit]
+    gpgsign = true
